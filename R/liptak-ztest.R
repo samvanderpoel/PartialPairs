@@ -1,6 +1,19 @@
-# Liptak weighted Z-test
-
+#' Liptak weighted Z-test
+#'
+#' Performs Liptak's weighted z-test for partially matched pairs
+#'
+#' @param x a non-empty numeric vector of data values
+#' @param y a non-empty numeric vector of data values
+#' @param alternative specification of the alternative hypothesis; "two.sided", "greater", or "less".
+#'
+#' @return p-value corresponding with the hypothesis test
+#'
+#' @examples
+#' 
+#'
+#' @export
 liptak.ztest = function(x, y, alternative=c('two-sided', 'greater', 'less')) {
+     # check whether length(x)==length(y)
      if (length(x)!=length(y) & (sum(!is.na(x))<3 | sum(!is.na(y))<3)) {
           stop('Sample sizes are too small, and length of x should ',
                'equal length of y.')
@@ -10,6 +23,7 @@ liptak.ztest = function(x, y, alternative=c('two-sided', 'greater', 'less')) {
           return (t.test(x[!is.na(x)], y[!is.na(y)])$p.value)
      }
      
+     # test whether appropriate sample size conditons are met
      full.sample.inds = !is.na(x) & !is.na(y); n1 = sum(full.sample.inds)
      only.x = !is.na(x) & is.na(y);            n2 = sum(only.x)
      only.y = !is.na(y) & is.na(x);            n3 = sum(only.y)
@@ -26,8 +40,8 @@ liptak.ztest = function(x, y, alternative=c('two-sided', 'greater', 'less')) {
           return (t.test(x[only.x], y[only.y],
                          alternative = alternative)$p.value)
      }
-     # if n1>=3 and n2+n3>=5, Liptak's z-test is performed.
      
+     # else, n1>=3 and n2+n3>=5 is met, Liptak's z-test is performed.
      len = length(strsplit(alternative, split='')[[1]])
      alt.str.comp = strsplit('alternative', split='')[[1]][1:len]
      if (all(alternative == alt.str.comp)) {

@@ -1,5 +1,19 @@
-# Kim et al.'s modified t-statistic
-
+#' Kim et al.'s modified t-statistic
+#'
+#' Uses Kim et al.'s modified t-statistic to obtain a p-value for
+#' partially matched pairs.
+#'
+#' @param x a non-empty numeric vector of data values
+#' @param y a non-empty numeric vector of data values
+#' @param alternative specification of the alternative hypothesis.
+#' Takes values: "two.sided", "greater", or "less".
+#'
+#' @return p-value corresponding with the hypothesis test
+#'
+#' @examples
+#' 
+#'
+#' @export
 modified.t.stat = function(x, y,
                            alternative = c('two-sided', 'greater', 'less')) {
      full.sample.inds = !is.na(x) & !is.na(y)
