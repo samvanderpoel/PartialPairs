@@ -38,13 +38,6 @@ liptak.ztest = function(x, y, alternative=c('two.sided', 'greater', 'less')) {
      only.y = !is.na(y) & is.na(x)
      pair.x = x[pair.inds]
      pair.y = y[pair.inds]
-     # check whether variance of data is approx. zero
-     if (sd(x[only.x]) < 10 * .Machine$double.eps * abs(mean(x[only.x])) |
-         sd(y[only.y]) < 10 * .Machine$double.eps * abs(mean(y[only.y])) |
-         sd(pair.x-pair.y) < 10 *.Machine$double.eps *
-                             max(abs(mean(pair.x)), abs(mean(pair.y))))  {
-          stop('Variance of data is almost zero')
-     }
      # test whether appropriate sample size conditons are met
      n1 = sum(pair.inds)
      n2 = sum(only.x)
@@ -63,6 +56,13 @@ liptak.ztest = function(x, y, alternative=c('two.sided', 'greater', 'less')) {
                          alternative = alternative)$p.value)
      }
      # else, n1>=3 and n2+n3>=5 is met, Liptak's z-test is performed.
+     # check whether variance of data is approx. zero
+     if (sd(x[only.x]) < 10 * .Machine$double.eps * abs(mean(x[only.x])) |
+         sd(y[only.y]) < 10 * .Machine$double.eps * abs(mean(y[only.y])) |
+         sd(pair.x-pair.y) < 10 *.Machine$double.eps *
+                             max(abs(mean(pair.x)), abs(mean(pair.y))))  {
+          stop('Variance of data is too close to zero.')
+     }
      alternative = match.arg(alternative)
      if (alternative == 'greater') {
           p1 = t.test(pair.x, pair.y,
