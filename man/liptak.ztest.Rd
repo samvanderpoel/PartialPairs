@@ -17,9 +17,18 @@ liptak.ztest(x, y, alternative = c("two-sided", "greater", "less"))
 p-value corresponding with the hypothesis test
 }
 \description{
-Performs Liptak's weighted z-test for partially matched pairs
+\code{liptak.ztest} returns the p-value associated with Liptak's weighted
+z-test for partially matched pairs
+}
+\details{
+These are the details
 }
 \examples{
+This is an example
 
-
+}
+\references{
+Kuan, Pei Fen, and Bo Huang. "A simple and robust method for partially
+matched samples using the p‐values pooling approach." Statistics in 
+medicine 32.19 (2013): 3247-3259.
 }

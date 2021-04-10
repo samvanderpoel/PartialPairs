@@ -1,6 +1,9 @@
 #' Liptak weighted Z-test
 #'
-#' Performs Liptak's weighted z-test for partially matched pairs
+#' \code{liptak.ztest} returns the p-value associated with Liptak's weighted
+#' z-test for partially matched pairs
+#' 
+#' These are the details
 #'
 #' @param x a non-empty numeric vector of data values
 #' @param y a non-empty numeric vector of data values
@@ -9,30 +12,48 @@
 #' @return p-value corresponding with the hypothesis test
 #'
 #' @examples
+#' This is an example.
 #' 
+#' @references
+#' Kuan, Pei Fen, and Bo Huang. "A simple and robust method for partially
+#' matched samples using the p‐values pooling approach." Statistics in 
+#' medicine 32.19 (2013): 3247-3259.
 #'
 #' @export
-liptak.ztest = function(x, y, alternative=c('two-sided', 'greater', 'less')) {
+liptak.ztest = function(x, y, alternative=c('two.sided', 'greater', 'less')) {
      # check whether length(x)==length(y)
-     if (length(x)!=length(y) & (sum(!is.na(x))<3 | sum(!is.na(y))<3)) {
-          stop('Sample sizes are too small, and length of x should ',
-               'equal length of y.')
-     } else if (length(x)!=length(y) & sum(!is.na(x))>=3 & sum(!is.na(y))>=3) {    
-          warning('Length of x should equal length of y. ',
-                  'Two sample t-test performed.')
-          return (t.test(x[!is.na(x)], y[!is.na(y)])$p.value)
+     if (length(x)!=length(y)) {
+          if (sum(!is.na(x))<3 | sum(!is.na(y))<3) {
+               stop('Sample sizes are too small and length of x ',
+                    'should equal length of y.')
+          } else {
+               warning('Length of x should equal length of y. ',
+                       'Two sample t-test performed.')
+               return (t.test(x[!is.na(x)], y[!is.na(y)])$p.value)
+          }
      }
-     
+     pair.inds = !is.na(x) & !is.na(y)
+     only.x = !is.na(x) & is.na(y)
+     only.y = !is.na(y) & is.na(x)
+     pair.x = x[pair.inds]
+     pair.y = y[pair.inds]
+     # check whether variance of data is approx. zero
+     if (sd(x[only.x]) < 10 * .Machine$double.eps * abs(mean(x[only.x])) |
+         sd(y[only.y]) < 10 * .Machine$double.eps * abs(mean(y[only.y])) |
+         sd(pair.x-pair.y) < 10 *.Machine$double.eps *
+                             max(abs(mean(pair.x)), abs(mean(pair.y))))  {
+          stop('Variance of data is almost zero')
+     }
      # test whether appropriate sample size conditons are met
-     full.sample.inds = !is.na(x) & !is.na(y); n1 = sum(full.sample.inds)
-     only.x = !is.na(x) & is.na(y);            n2 = sum(only.x)
-     only.y = !is.na(y) & is.na(x);            n3 = sum(only.y)
+     n1 = sum(pair.inds)
+     n2 = sum(only.x)
+     n3 = sum(only.y)
      if (n1<3 & n2+n3<5) {
-          stop('Sample sizes are too small')
+          stop('Sample sizes are too small or too much missing data.')
      } else if (n1>=3 & n2+n3<5) {
           warning('Not enough missing data for Liptak z-test. ',
                   'Matched pairs t-test performed.')
-          return (t.test(x[full.sample.inds], y[full.sample.inds],
+          return (t.test(pair.x, pair.y,
                          alternative = alternative, paired = TRUE)$p.value)
      } else if (n1<3 & n2+n3>=5) {
           warning('Not enough matched pairs for Liptak z-test. ',
@@ -40,25 +61,25 @@ liptak.ztest = function(x, y, alternative=c('two-sided', 'greater', 'less')) {
           return (t.test(x[only.x], y[only.y],
                          alternative = alternative)$p.value)
      }
-     
      # else, n1>=3 and n2+n3>=5 is met, Liptak's z-test is performed.
-     len = length(strsplit(alternative, split='')[[1]])
-     alt.str.comp = strsplit('alternative', split='')[[1]][1:len]
-     if (all(alternative == alt.str.comp)) {
-          p1 = t.test(x[full.sample.inds], y[full.sample.inds],
+     alternative = match.arg(alternative)
+     if (alternative == 'greater') {
+          p1 = t.test(pair.x, pair.y,
                       paired = TRUE, alternative = 'greater')$p.value
           p2 = t.test(x[only.x], y[only.y], alternative = 'greater',
                       var.equal = FALSE)$p.value
      } else {
-          p1 = t.test(x[full.sample.inds], y[full.sample.inds],
+          p1 = t.test(pair.x, pair.y,
                       paired = TRUE, alternative = 'less')$p.value
           p2 = t.test(x[only.x], y[only.y], alternative = 'less',
                       var.equal = FALSE)$p.value
      }
-     w1 = sqrt(2*n1); w2 = sqrt(n2+n3)
-     Z1 = qnorm(1-p1); Z2 = qnorm(1-p2)
+     w1 = sqrt(2*n1)
+     w2 = sqrt(n2+n3)
+     Z1 = qnorm(1-p1)
+     Z2 = qnorm(1-p2)
      p.comb = 1 - pnorm( (w1*Z1+w2*Z2)/sqrt(w1^2+w2^2) )
-     if (all(alternative == 'two-sided')) {
+     if (alternative == 'two.sided') {
           if (p.comb<0.5) {p.comb=2*p.comb} else {p.comb=2*(1-p.comb)}
      }
      return (p.comb)
