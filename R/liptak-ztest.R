@@ -7,7 +7,8 @@
 #'
 #' @param x a non-empty numeric vector of data values
 #' @param y a non-empty numeric vector of data values
-#' @param alternative specification of the alternative hypothesis; "two.sided", "greater", or "less".
+#' @param alternative specification of the alternative hypothesis.
+#' Takes values: "two.sided", "greater", or "less".
 #'
 #' @return p-value corresponding with the hypothesis test
 #'

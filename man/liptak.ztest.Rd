@@ -4,14 +4,15 @@
 \alias{liptak.ztest}
 \title{Liptak weighted Z-test}
 \usage{
-liptak.ztest(x, y, alternative = c("two-sided", "greater", "less"))
+liptak.ztest(x, y, alternative = c("two.sided", "greater", "less"))
 }
 \arguments{
 \item{x}{a non-empty numeric vector of data values}
 
 \item{y}{a non-empty numeric vector of data values}
 
-\item{alternative}{specification of the alternative hypothesis; "two.sided", "greater", or "less".}
+\item{alternative}{specification of the alternative hypothesis.
+Takes values: "two.sided", "greater", or "less".}
 }
 \value{
 p-value corresponding with the hypothesis test
@@ -24,7 +25,7 @@ z-test for partially matched pairs
 These are the details
 }
 \examples{
-This is an example
+This is an example.
 
 }
 \references{

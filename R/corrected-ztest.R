@@ -1,7 +1,7 @@
-#' Kim et al.'s modified t-statistic
-#'
-#' \code{modified.t.stat} uses Kim et al.'s modified t-statistic to obtain a
-#' p-value for a partially matched pairs test.
+#' Looney and Jones corrected Z-test
+#' 
+#' \code{corrected.ztest} uses the Looney and Jones corrected z-test
+#' to obtain a p-value for a partially matched pairs test.
 #' 
 #' These are the details
 #'
@@ -21,7 +21,8 @@
 #' medicine 32.19 (2013): 3247-3259.
 #'
 #' @export
-modified.t.stat = function(x, y,
+
+corrected.ztest = function(x, y,
                            alternative = c('two-sided', 'greater', 'less')) {
      # check whether length(x)==length(y)
      if (length(x)!=length(y)) {
@@ -40,10 +41,8 @@ modified.t.stat = function(x, y,
      pair.x = x[pair.inds]
      pair.y = y[pair.inds]
      # check whether variance of data is approx. zero
-     if (sd(x[only.x]) < 10 * .Machine$double.eps * abs(mean(x[only.x])) |
-         sd(y[only.y]) < 10 * .Machine$double.eps * abs(mean(y[only.y])) |
-         sd(pair.x-pair.y) < 10 *.Machine$double.eps *
-                             max(abs(mean(pair.x)), abs(mean(pair.y))))  {
+     if (sd(x[!is.na(x)]) < 10*.Machine$double.eps * abs(mean(x[!is.na(x)])) |
+         sd(y[!is.na(y)]) < 10*.Machine$double.eps * abs(mean(y[!is.na(y)]))){
           stop('Variance of data is almost zero')
      }
      # test whether appropriate sample size conditons are met
@@ -63,21 +62,20 @@ modified.t.stat = function(x, y,
              return (t.test(x[only.x], y[only.y],
                             alternative = alternative)$p.value)
      }
-     # else, n1>=4 and n2+n3>=5 is met, modified t-test is executed
-     nh = 2/(1/n1+1/n2)
-     d.bar = mean(pair.x-pair.y)
-     SD    = sd(pair.x-pair.y)
-     t.bar = mean(x[only.x])
-     n.bar = mean(y[only.y])
-     ST = sd(x[only.x])
-     SN = sd(y[only.y])
-     t3 = (n1*d.bar+nh*(t.bar-n.bar)) / sqrt(n1*SD^2 + nh^2*(ST^2/n2+SN^2/n3))
-     if (alternative == 'greater') {
-          p.value = pnorm(t3, lower.tail = FALSE)
-     } else if (alternative == 'less') {
-          p.value = pnorm(t3, lower.tail = TRUE)
-     } else if (alternative == 'two-sided') {
-          p.value = 2*pnorm(abs(t3), lower.tail = FALSE)
+     # if n1>=4 and n2+n3>=5, modified t-test is executed
+     T.bar = mean(x[!is.na(x)])
+     N.bar = mean(y[!is.na(y)])
+     ST = sd(x[!is.na(x)])
+     SN = sd(y[!is.na(y)])
+     STN1 = cov(pair.x, pair.y)
+     se = sqrt( ST^2/(n1+n2) + SN^2/(n1+n3) - 2*n1*STN/((n1+n2)*(n1+n3)) )
+     z.corr = (T.bar - N.bar) / se
+     if (all(alternative == 'greater')) {
+          p.value = pnorm(z.corr, lower.tail = FALSE)
+     } else if (all(alternative == 'less')) {
+          p.value = pnorm(z.corr, lower.tail = TRUE)
+     } else if (all(alternative == 'two-sided')) {
+          p.value = 2*pnorm(abs(z.corr), lower.tail = FALSE)
      }
      return (p.value)
 }
