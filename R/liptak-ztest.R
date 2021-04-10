@@ -57,10 +57,10 @@ liptak.ztest = function(x, y, alternative=c('two.sided', 'greater', 'less')) {
      }
      # else, n1>=3 and n2+n3>=5 is met, Liptak's z-test is performed.
      # check whether variance of data is approx. zero
-     if (sd(x[only.x]) < 10 * .Machine$double.eps * abs(mean(x[only.x])) |
-         sd(y[only.y]) < 10 * .Machine$double.eps * abs(mean(y[only.y])) |
-         sd(pair.x-pair.y) < 10 *.Machine$double.eps *
-                             max(abs(mean(pair.x)), abs(mean(pair.y))))  {
+     if ((sd(x[only.x]) < 10 * .Machine$double.eps * abs(mean(x[only.x]))  &
+          sd(y[only.y]) < 10 * .Machine$double.eps * abs(mean(y[only.y]))) |
+          sd(pair.x-pair.y) < 10 *.Machine$double.eps *
+                              max(abs(mean(pair.x)), abs(mean(pair.y))))   {
           stop('Variance of data is too close to zero.')
      }
      alternative = match.arg(alternative)

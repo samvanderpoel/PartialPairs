@@ -22,7 +22,7 @@
 #'
 #' @export
 modified.t.stat = function(x, y,
-                           alternative = c('two-sided', 'greater', 'less')) {
+                           alternative = c('two.sided', 'greater', 'less')) {
      # check whether length(x)==length(y)
      if (length(x)!=length(y)) {
           if (sum(!is.na(x))<3 | sum(!is.na(y))<3) {
@@ -63,8 +63,8 @@ modified.t.stat = function(x, y,
      ST = sd(x[only.x])
      SN = sd(y[only.y])
      # check whether variance of data is approx. zero
-     if (ST < 10 * .Machine$double.eps * abs(t.bar) |
-         SN < 10 * .Machine$double.eps * abs(n.bar) |
+     if (ST < 10 * .Machine$double.eps * abs(t.bar) &
+         SN < 10 * .Machine$double.eps * abs(n.bar) &
          SD < 10 * .Machine$double.eps *
               max(abs(mean(pair.x)), abs(mean(pair.y)))) {
           stop('Variance of data is too close to zero.')
@@ -77,7 +77,7 @@ modified.t.stat = function(x, y,
           p.value = pnorm(t3, lower.tail = FALSE)
      } else if (alternative == 'less') {
           p.value = pnorm(t3, lower.tail = TRUE)
-     } else if (alternative == 'two-sided') {
+     } else if (alternative == 'two.sided') {
           p.value = 2*pnorm(abs(t3), lower.tail = FALSE)
      }
      return (p.value)

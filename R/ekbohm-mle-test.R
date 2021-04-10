@@ -22,7 +22,7 @@
 #'
 #' @export
 ekbohm.mle.test = function(x, y,
-                           alternative = c('two-sided', 'greater', 'less')) {
+                           alternative = c('two.sided', 'greater', 'less')) {
      # check whether length(x)==length(y)
      if (length(x)!=length(y)) {
           if (sum(!is.na(x))<3 | sum(!is.na(y))<3) {
@@ -67,13 +67,13 @@ ekbohm.mle.test = function(x, y,
      SN1 = sd(pair.y)
      STN1 = cov(pair.x, pair.y)
      # check whether variance of data is approx. zero
-     if (ST   < 10*.Machine$double.eps * abs(T.bar) |
-         SN   < 10*.Machine$double.eps * abs(N.bar) |
-         ST1  < 10*.Machine$double.eps * abs(T1.bar) |
-         SN1  < 10*.Machine$double.eps * abs(N1.bar) |
+     if (ST   < 10*.Machine$double.eps * abs(T.bar)  &
+         SN   < 10*.Machine$double.eps * abs(N.bar)  &
+         ST1  < 10*.Machine$double.eps * abs(T1.bar) &
+         SN1  < 10*.Machine$double.eps * abs(N1.bar) &
          STN1 < 10*.Machine$double.eps * 
-                max(abs(mean(pair.x)), abs(mean(pair.y)))){
-          stop('Variance of data is too close to zero')
+         max(abs(mean(pair.x)), abs(mean(pair.y)))){
+             stop('Variance of data is too close to zero')
      }
      r = STN1 / (ST1 * SN1)
      f.star = n1*(n1+n3+n2*r) / ((n1+n2)*(n1+n3)-n2*n3*r^2)
@@ -89,7 +89,7 @@ ekbohm.mle.test = function(x, y,
           p.value = pt(Ze, n1, lower.tail = FALSE)
      } else if (all(alternative == 'less')) {
           p.value = pt(Ze, n1, lower.tail = TRUE)
-     } else if (all(alternative == 'two-sided')) {
+     } else if (all(alternative == 'two.sided')) {
           p.value = 2*pt(abs(Ze), n1, lower.tail = FALSE)
      }
      return (p.value)

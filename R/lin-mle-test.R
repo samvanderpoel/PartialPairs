@@ -23,7 +23,7 @@
 #'
 #' @export
 lin.mle.test = function(x, y,
-                        alternative = c('two-sided', 'greater', 'less')) {
+                        alternative = c('two.sided', 'greater', 'less')) {
      # check whether length(x)==length(y)
      if (length(x)!=length(y)) {
           if (sum(!is.na(x))<3 | sum(!is.na(y))<3) {
@@ -38,8 +38,8 @@ lin.mle.test = function(x, y,
      pair.inds = !is.na(x) & !is.na(y)
      only.x = !is.na(x) & is.na(y)
      only.y = !is.na(y) & is.na(x)
-     pair.x = pair.x
-     pair.y = pair.y
+     pair.x = x[pair.inds]
+     pair.y = y[pair.inds]
      # test whether appropriate sample size conditons are met
      n1 = sum(pair.inds)
      n2 = sum(only.x)
@@ -81,7 +81,7 @@ lin.mle.test = function(x, y,
           p.value = pt(Z.ls, n1, lower.tail = FALSE)
      } else if (all(alternative == 'less')) {
           p.value = pt(Z.ls, n1, lower.tail = TRUE)
-     } else if (all(alternative == 'two-sided')) {
+     } else if (all(alternative == 'two.sided')) {
           p.value = 2*pt(abs(Z.ls), n1, lower.tail = FALSE)
      }
      return (p.value)
