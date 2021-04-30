@@ -1,19 +1,34 @@
 #' Kim et al.'s modified t-statistic
 #'
-#' \code{modified.t.stat} uses Kim et al.'s modified t-statistic to obtain a
+#' \code{modified.tstat} uses Kim et al.'s modified t-statistic to obtain a
 #' p-value for a partially matched pairs test.
 #' 
-#' These are the details
+#' Kim et al.’s modified t-statistic follows an approximately standard Gaussian
+#' distribution under the null hypothesis. Mathematical details are provided in
+#' [Kuan & Huang, 2013].
+#' 
+#' If proper sample size conditions are not met, then \code{modified.tstat} may
+#' exit or perform a paired or unpaired two-sample t.test, depending on the
+#' nature of the sample size issue.
+#' 
+#' If the variance of input data is close to zero, \code{modified.tstat} will
+#' return an error message.
 #'
 #' @param x a non-empty numeric vector of data values
 #' @param y a non-empty numeric vector of data values
 #' @param alternative specification of the alternative hypothesis.
-#' Takes values: "two.sided", "greater", or "less".
+#' Takes values: \code{two.sided}, \code{greater}, or \code{less}.
 #'
-#' @return p-value corresponding with the hypothesis test
+#' @return p-value associated with the hypothesis test
 #'
 #' @examples
-#' This is an example.
+#' In the following, the true means are not equal:
+#' 
+#' x = rnorm(400, 0, 1)
+#' x[sample(1:400, size=75, replace=FALSE)] = NA
+#' y = rnorm(400, 0.4, 3)
+#' y[sample(1:400, size=75, replace=FALSE)] = NA
+#' modified.tstat(x, y, alternative = 'two.sided')
 #' 
 #' @references
 #' Kuan, Pei Fen, and Bo Huang. "A simple and robust method for partially
@@ -21,7 +36,7 @@
 #' medicine 32.19 (2013): 3247-3259.
 #'
 #' @export
-modified.t.stat = function(x, y,
+modified.tstat = function(x, y,
                            alternative = c('two.sided', 'greater', 'less')) {
      # check whether length(x)==length(y)
      if (length(x)!=length(y)) {
@@ -69,7 +84,7 @@ modified.t.stat = function(x, y,
               max(abs(mean(pair.x)), abs(mean(pair.y)))) {
           stop('Variance of data is too close to zero.')
      }
-     nh = 2/(1/n1+1/n2)
+     nh = 2/(1/n2+1/n3)
      d.bar = mean(pair.x-pair.y)
      t3 = (n1*d.bar+nh*(t.bar-n.bar)) / sqrt(n1*SD^2 + nh^2*(ST^2/n2+SN^2/n3))
      alternative = match.arg(alternative)

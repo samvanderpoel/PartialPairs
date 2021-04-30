@@ -3,17 +3,33 @@
 #' \code{ekbohm.mle.test} uses Ekbohm’s MLE-based test under homoscedasticity
 #' to obtain a p-value for a partially matched pairs test.
 #' 
-#' These are the details
+#' Ekbohm’s test makes use of a modified maximum likelihood estimator and
+#' assumption of homoscedasticity. Under the null hypothesis, the resulting test
+#' statistic Z_E, follows an approximate t distribution with n1 degrees of
+#' freedom. Mathematical details are provided in [Kuan & Huang, 2013].
+#' 
+#' If proper sample size conditions are not met, then \code{ekbohm.mle.test} may
+#' exit or perform a paired or unpaired two-sample t.test, depending on the
+#' nature of the sample size issue.
+#' 
+#' If the variance of input data is close to zero, \code{ekbohm.mle.test} will
+#' return an error message.
 #'
 #' @param x a non-empty numeric vector of data values
 #' @param y a non-empty numeric vector of data values
 #' @param alternative specification of the alternative hypothesis.
-#' Takes values: "two.sided", "greater", or "less".
+#' Takes values: \code{two.sided}, \code{greater}, or \code{less}.
 #'
-#' @return p-value corresponding with the hypothesis test
+#' @return p-value associated with the hypothesis test
 #'
 #' @examples
-#' This is an example.
+#' In the following, the true means are not equal:
+#' 
+#' x = rnorm(400, 0, 1)
+#' x[sample(1:400, size=75, replace=FALSE)] = NA
+#' y = rnorm(400, 0.4, 3)
+#' y[sample(1:400, size=75, replace=FALSE)] = NA
+#' ekbohm.mle.test(x, y, alternative = 'two.sided')
 #' 
 #' @references
 #' Kuan, Pei Fen, and Bo Huang. "A simple and robust method for partially

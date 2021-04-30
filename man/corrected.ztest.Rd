@@ -4,7 +4,7 @@
 \alias{corrected.ztest}
 \title{Looney and Jones corrected Z-test}
 \usage{
-corrected.ztest(x, y, alternative = c("two-sided", "greater", "less"))
+corrected.ztest(x, y, alternative = c("two.sided", "greater", "less"))
 }
 \arguments{
 \item{x}{a non-empty numeric vector of data values}
@@ -12,20 +12,37 @@ corrected.ztest(x, y, alternative = c("two-sided", "greater", "less"))
 \item{y}{a non-empty numeric vector of data values}
 
 \item{alternative}{specification of the alternative hypothesis.
-Takes values: "two.sided", "greater", or "less".}
+Takes values: \code{two.sided}, \code{greater}, or \code{less}.}
 }
 \value{
-p-value corresponding with the hypothesis test
+p-value associated with the hypothesis test
 }
 \description{
 \code{corrected.ztest} uses the Looney and Jones corrected z-test
 to obtain a p-value for a partially matched pairs test.
 }
 \details{
-These are the details
+Looney and Jones’s corrected Z-test is ``corrected'' in the sense that it
+adjusts the standard error of the difference of the two samples by accounting
+for the correlation between the $n_1$ paired observations. Under the null
+hypothesis, the resulting test statistic Z_corr has an asymptotic N(0,1)
+distribution. 
+
+If proper sample size conditions are not met, then \code{corrected.ztest} may
+exit or perform a paired or unpaired two-sample t.test, depending on the
+nature of the sample size issue.
+
+If the variance of input data is close to zero, \code{corrected.ztest} will
+return an error message.
 }
 \examples{
-This is an example.
+In the following, the true means are not equal:
+
+x = rnorm(400, 0, 1)
+x[sample(1:400, size=75, replace=FALSE)] = NA
+y = rnorm(400, 0.4, 3)
+y[sample(1:400, size=75, replace=FALSE)] = NA
+corrected.ztest(x, y, alternative = 'two.sided')
 
 }
 \references{

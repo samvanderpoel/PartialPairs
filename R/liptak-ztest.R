@@ -3,17 +3,34 @@
 #' \code{liptak.ztest} returns the p-value associated with Liptak's weighted
 #' z-test for partially matched pairs
 #' 
-#' These are the details
+#' Liptak's weighted Z-test computes the p-values of a paired sample t-test on
+#' the n1 paired entries and of a two-sample t-test on the n2+n3 unpaired
+#' entries (see vignette for further details on the paired vs. unpaired
+#' distinction). The two p-values are then weighted and combined as detailed in
+#' [Kuan & Huang, 2013].
+#' 
+#' If proper sample size conditions are not met, then \code{liptak.ztest} may
+#' exit or perform a paired or unpaired two-sample t.test, depending on the
+#' nature of the sample size issue.
+#' 
+#' If the variance of input data is close to zero, \code{liptak.ztest} will
+#' return an error message.
 #'
 #' @param x a non-empty numeric vector of data values
 #' @param y a non-empty numeric vector of data values
 #' @param alternative specification of the alternative hypothesis.
-#' Takes values: "two.sided", "greater", or "less".
+#' Takes values: \code{two.sided}, \code{greater}, or \code{less}.
 #'
-#' @return p-value corresponding with the hypothesis test
+#' @return p-value associated with the hypothesis test
 #'
 #' @examples
-#' This is an example.
+#' In the following, the true means are not equal:
+#' 
+#' x = rnorm(400, 0, 1)
+#' x[sample(1:400, size=75, replace=FALSE)] = NA
+#' y = rnorm(400, 0.4, 3)
+#' y[sample(1:400, size=75, replace=FALSE)] = NA
+#' liptak.ztest(x, y, alternative = 'two.sided')
 #' 
 #' @references
 #' Kuan, Pei Fen, and Bo Huang. "A simple and robust method for partially

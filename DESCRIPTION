@@ -7,3 +7,4 @@ Author: Sam van der Poel <sam.vanderpoel@stonybrook.edu>
 Maintainer: Sam van der Poel <sam.vanderpoel@stonybrook.edu>
 Encoding: UTF-8
 RoxygenNote: 7.1.1
+LazyData: true

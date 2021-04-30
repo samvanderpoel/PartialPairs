@@ -3,17 +3,34 @@
 #' \code{corrected.ztest} uses the Looney and Jones corrected z-test
 #' to obtain a p-value for a partially matched pairs test.
 #' 
-#' These are the details
+#' Looney and Jones’s corrected Z-test is ``corrected'' in the sense that it
+#' adjusts the standard error of the difference of the two samples by accounting
+#' for the correlation between the $n_1$ paired observations. Under the null
+#' hypothesis, the resulting test statistic Z_corr has an asymptotic N(0,1)
+#' distribution. 
+#' 
+#' If proper sample size conditions are not met, then \code{corrected.ztest} may
+#' exit or perform a paired or unpaired two-sample t.test, depending on the
+#' nature of the sample size issue.
+#' 
+#' If the variance of input data is close to zero, \code{corrected.ztest} will
+#' return an error message.
 #'
 #' @param x a non-empty numeric vector of data values
 #' @param y a non-empty numeric vector of data values
 #' @param alternative specification of the alternative hypothesis.
-#' Takes values: "two.sided", "greater", or "less".
+#' Takes values: \code{two.sided}, \code{greater}, or \code{less}.
 #'
-#' @return p-value corresponding with the hypothesis test
+#' @return p-value associated with the hypothesis test
 #'
 #' @examples
-#' This is an example.
+#' In the following, the true means are not equal:
+#' 
+#' x = rnorm(400, 0, 1)
+#' x[sample(1:400, size=75, replace=FALSE)] = NA
+#' y = rnorm(400, 0.4, 3)
+#' y[sample(1:400, size=75, replace=FALSE)] = NA
+#' corrected.ztest(x, y, alternative = 'two.sided')
 #' 
 #' @references
 #' Kuan, Pei Fen, and Bo Huang. "A simple and robust method for partially
