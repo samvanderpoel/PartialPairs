@@ -7,12 +7,12 @@
 corrected.ztest(x, y, alternative = c("two.sided", "greater", "less"))
 }
 \arguments{
-\item{x}{a non-empty numeric vector of data values}
+\item{x}{a non-empty numeric vector containing some NA values}
 
-\item{y}{a non-empty numeric vector of data values}
+\item{y}{a non-empty numeric vector containing some NA values}
 
 \item{alternative}{specification of the alternative hypothesis.
-Takes values: \code{two.sided}, \code{greater}, or \code{less}.}
+Takes values: \code{"two.sided"}, \code{"greater"}, or \code{"less"}.}
 }
 \value{
 p-value associated with the hypothesis test

@@ -1,6 +1,6 @@
-Package: PartialPairs
+Package: PMvanderpoel
 Version: 0.1
-Date: 2021-04-09
+Date: 2021-05-05
 Title: Statistics for Partially Matched Samples
 Description: Several methods for making inferences about partially matched samples, i.e. when there is missing data among matched pairs. Based on techniques described in an article published by Kuan and Huang.
 Author: Sam van der Poel <sam.vanderpoel@stonybrook.edu>

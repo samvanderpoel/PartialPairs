@@ -16,10 +16,10 @@
 #' If the variance of input data is close to zero, \code{liptak.ztest} will
 #' return an error message.
 #'
-#' @param x a non-empty numeric vector of data values
-#' @param y a non-empty numeric vector of data values
+#' @param x a non-empty numeric vector containing some NA values
+#' @param y a non-empty numeric vector containing some NA values
 #' @param alternative specification of the alternative hypothesis.
-#' Takes values: \code{two.sided}, \code{greater}, or \code{less}.
+#' Takes values: \code{"two.sided"}, \code{"greater"}, or \code{"less"}.
 #'
 #' @return p-value associated with the hypothesis test
 #'
@@ -46,7 +46,7 @@ liptak.ztest = function(x, y, alternative=c('two.sided', 'greater', 'less')) {
                     'should equal length of y.')
           } else {
                warning('Length of x should equal length of y. ',
-                       'Two sample t-test performed.')
+                       'Two sample t-test attempted')
                return (t.test(x[!is.na(x)], y[!is.na(y)])$p.value)
           }
      }
@@ -63,20 +63,20 @@ liptak.ztest = function(x, y, alternative=c('two.sided', 'greater', 'less')) {
           stop('Sample sizes are too small or too much missing data.')
      } else if (n1>=3 & n2+n3<5) {
           warning('Not enough missing data for Liptak z-test. ',
-                  'Matched pairs t-test performed.')
+                  'Matched pairs t-test attempted')
           return (t.test(pair.x, pair.y,
                          alternative = alternative, paired = TRUE)$p.value)
      } else if (n1<3 & n2+n3>=5) {
           warning('Not enough matched pairs for Liptak z-test. ',
-                  'Two sample t-test performed.')
+                  'Two sample t-test attempted')
           return (t.test(x[only.x], y[only.y],
                          alternative = alternative)$p.value)
      }
      # else, n1>=3 and n2+n3>=5 is met, Liptak's z-test is performed.
      # check whether variance of data is approx. zero
-     if ((sd(x[only.x]) < 10 * .Machine$double.eps * abs(mean(x[only.x]))  &
-          sd(y[only.y]) < 10 * .Machine$double.eps * abs(mean(y[only.y]))) |
-          sd(pair.x-pair.y) < 10 *.Machine$double.eps *
+     if ((sd(x[only.x]) < .Machine$double.eps * abs(mean(x[only.x]))  &
+          sd(y[only.y]) < .Machine$double.eps * abs(mean(y[only.y]))) |
+          sd(pair.x-pair.y) < .Machine$double.eps *
                               max(abs(mean(pair.x)), abs(mean(pair.y))))   {
           stop('Variance of data is too close to zero.')
      }

@@ -15,10 +15,10 @@
 #' If the variance of input data is close to zero, \code{ekbohm.mle.test} will
 #' return an error message.
 #'
-#' @param x a non-empty numeric vector of data values
-#' @param y a non-empty numeric vector of data values
+#' @param x a non-empty numeric vector containing some NA values
+#' @param y a non-empty numeric vector containing some NA values
 #' @param alternative specification of the alternative hypothesis.
-#' Takes values: \code{two.sided}, \code{greater}, or \code{less}.
+#' Takes values: \code{"two.sided"}, \code{"greater"}, or \code{"less"}.
 #'
 #' @return p-value associated with the hypothesis test
 #'
@@ -46,7 +46,7 @@ ekbohm.mle.test = function(x, y,
                     'should equal length of y.')
           } else {
                warning('Length of x should equal length of y. ',
-                       'Two sample t-test performed.')
+                       'Two sample t-test attempted')
                return (t.test(x[!is.na(x)], y[!is.na(y)])$p.value)
           }
      }
@@ -63,12 +63,12 @@ ekbohm.mle.test = function(x, y,
              stop('Sample sizes are too small')
      } else if (n1>=4 & n2+n3<5) {
              warning('Not enough missing data for modified t-test. ',
-                     'Matched pairs t-test executed.')
+                     'Matched pairs t-test attempted')
              return (t.test(pair.x, pair.y,
                             alternative = alternative, paired = TRUE)$p.value)
      } else if (n1<4 & n2+n3>=5) {
              warning('Not enough matched pairs for modified t-test. ',
-                     'Two sample t-test executed.')
+                     'Two sample t-test attempted')
              return (t.test(x[only.x], y[only.y],
                             alternative = alternative)$p.value)
      }
